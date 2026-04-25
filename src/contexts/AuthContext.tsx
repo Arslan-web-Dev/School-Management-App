@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "admin" | "teacher" | "student";
+export type AppRole = "admin" | "teacher" | "student" | "parent";
 
 interface AuthContextValue {
   session: Session | null;
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .order("role", { ascending: true });
     if (data && data.length) {
       // Prefer admin > teacher > student
-      const priority: AppRole[] = ["admin", "teacher", "student"];
+      const priority: AppRole[] = ["admin", "teacher", "student", "parent"];
       const found = priority.find((r) => data.some((d) => d.role === r));
       setRole(found ?? (data[0].role as AppRole));
     } else {

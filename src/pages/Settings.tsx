@@ -9,7 +9,7 @@ const Settings = () => {
 
       <div className="grid gap-4 md:grid-cols-2">
         <InfoCard icon={School} title="School profile" body="Multi-school support, logo upload, and academic-year management are coming in a future update. The current build is a single-school setup." />
-        <InfoCard icon={Database} title="Backend" body="Powered by Supabase. Your data is stored in a managed Postgres database with row-level security enforced on every table." />
+        <InfoCard icon={Database} title="Backend" body="Powered by Lovable Cloud. Your data is stored in a managed Postgres database with row-level security enforced on every table." />
         <InfoCard icon={Shield} title="Roles & access" body="Roles (admin / teacher / student) are stored in a dedicated table and never on profiles. Permissions are enforced server-side through RLS policies." />
       </div>
     </div>

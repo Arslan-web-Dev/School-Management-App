@@ -1,14 +1,14 @@
-import { LucideIcon } from "lucide-react";
+import { Inbox, LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 interface Props {
-  icon: LucideIcon;
+  icon?: LucideIcon;
   title: string;
   description?: string;
   action?: ReactNode;
 }
 
-export const EmptyState = ({ icon: Icon, title, description, action }: Props) => (
+export const EmptyState = ({ icon: Icon = Inbox, title, description, action }: Props) => (
   <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 px-4 text-center">
     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted mb-4">
       <Icon className="h-6 w-6 text-muted-foreground" />
