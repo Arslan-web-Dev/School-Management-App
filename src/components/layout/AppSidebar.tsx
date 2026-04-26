@@ -148,19 +148,27 @@ export const AppSidebar = () => {
           <SidebarGroupLabel>Main</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {visible.map((item) => {
-                const active = location.pathname === item.url;
-                return (
-                  <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton asChild isActive={active}>
-                      <NavLink to={item.url} end>
-                        <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
+              {visible.length === 0 ? (
+                <SidebarMenuItem>
+                  <div className="px-3 py-2 text-xs text-muted-foreground">
+                    {!role ? "Loading permissions..." : "No access granted"}
+                  </div>
+                </SidebarMenuItem>
+              ) : (
+                visible.map((item) => {
+                  const active = location.pathname === item.url;
+                  return (
+                    <SidebarMenuItem key={item.url}>
+                      <SidebarMenuButton asChild isActive={active}>
+                        <NavLink to={item.url} end>
+                          <item.icon className="h-4 w-4" />
+                          {!collapsed && <span>{item.title}</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
