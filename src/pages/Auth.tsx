@@ -160,12 +160,12 @@ const Auth = () => {
       const userId = authData.user.id;
 
       const { error: studentError } = await supabase.from("students").insert({
-        user_id: userId, name: data.name, email: data.email, class_id: data.class_id,
+        user_id: userId, full_name: data.name, email: data.email, class_id: data.class_id,
         roll_number: data.roll_number || null, date_of_birth: data.date_of_birth || null,
         gender: data.gender || null, guardian_name: data.guardian_name,
         guardian_phone: data.guardian_phone, address: data.address || null,
         status: "active", admission_date: new Date().toISOString().split("T")[0],
-      });
+      } as any);
       if (studentError) throw studentError;
 
       const { error: roleError } = await supabase.from("user_roles").insert({ user_id: userId, role: "student" });
@@ -184,54 +184,9 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-[1.05fr_1fr] bg-background">
-      {/* Left — brand & marketing */}
-      <aside className="hidden lg:flex relative overflow-hidden flex-col justify-between p-10 bg-[var(--gradient-primary)] text-primary-foreground">
-        <div className="absolute inset-0 opacity-30 pointer-events-none"
-             style={{ backgroundImage: "radial-gradient(circle at 20% 20%, hsl(0 0% 100% / 0.25), transparent 40%), radial-gradient(circle at 80% 80%, hsl(0 0% 100% / 0.18), transparent 45%)" }} />
-        <div className="relative">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm ring-1 ring-white/20">
-              <School className="h-6 w-6" />
-            </div>
-            <div className="leading-tight">
-              <p className="text-lg font-semibold">EduManage Pro</p>
-              <p className="text-xs text-white/80">Smart School Management</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative space-y-6 max-w-md">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs ring-1 ring-white/20 backdrop-blur-sm">
-            <Sparkles className="h-3.5 w-3.5" /> One platform · three control panels
-          </div>
-          <h2 className="text-4xl font-bold tracking-tight leading-[1.1]">
-            Run your school with clarity, not chaos.
-          </h2>
-          <p className="text-white/85 text-sm leading-relaxed">
-            Attendance, fees, salaries, exams, and parent communication — unified in
-            a fast, role-based dashboard built for modern institutions.
-          </p>
-
-          <ul className="space-y-3 text-sm">
-            {[
-              "Admin · Full control over students, staff & finances",
-              "Staff · Mark attendance, post diary, view salary",
-              "Parent · Track your child's day, fees & results",
-            ].map((t) => (
-              <li key={t} className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-white/90" />
-                <span className="text-white/90">{t}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <p className="relative text-xs text-white/70">© {new Date().getFullYear()} EduManage Pro</p>
-      </aside>
-
-      {/* Right — auth card */}
-      <div className="flex items-center justify-center p-4 sm:p-8">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 sm:p-8">
+      {/* Auth card - centered */}
+      <div className="w-full max-w-md space-y-6">
         <div className="w-full max-w-md space-y-6">
           <div className="lg:hidden text-center space-y-2">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
