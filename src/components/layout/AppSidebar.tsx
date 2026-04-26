@@ -8,7 +8,7 @@ import {
   LayoutDashboard, Users, GraduationCap, BookOpen,
   CalendarCheck, Megaphone, Settings, UserCircle, School,
   Wallet, Banknote, NotebookPen, CalendarDays, ClipboardList,
-  Building2, Baby,
+  Building2, Baby, BarChart3, Bell, Award,
 } from "lucide-react";
 import { useAuth, AppRole } from "@/contexts/AuthContext";
 
@@ -32,9 +32,13 @@ const items: NavItem[] = [
   { title: "Attendance", url: "/attendance", icon: CalendarCheck, roles: ["admin", "teacher"] },
   { title: "My Attendance", url: "/my-attendance", icon: CalendarCheck, roles: ["student"] },
   { title: "Exams", url: "/exams", icon: ClipboardList, roles: ["admin", "teacher", "student", "parent"] },
+  { title: "My Children's Results", url: "/my-results", icon: Award, roles: ["parent"] },
   { title: "Fees", url: "/fees", icon: Wallet, roles: ["admin", "student", "parent"] },
-  { title: "Salaries", url: "/salaries", icon: Banknote, roles: ["admin", "teacher"] },
+  { title: "Salaries", url: "/salaries", icon: Banknote, roles: ["admin"] },
+  { title: "My Salary", url: "/my-salary", icon: Banknote, roles: ["teacher"] },
   { title: "Notices", url: "/notices", icon: Megaphone, roles: ["admin", "teacher", "student", "parent"] },
+  { title: "Notifications", url: "/notifications", icon: Bell, roles: ["admin", "teacher", "student", "parent"] },
+  { title: "Reports", url: "/reports", icon: BarChart3, roles: ["admin"] },
   { title: "My Children", url: "/my-children", icon: Baby, roles: ["parent"] },
   { title: "Profile", url: "/profile", icon: UserCircle, roles: ["admin", "teacher", "student", "parent"] },
   { title: "Settings", url: "/settings", icon: Settings, roles: ["admin"] },

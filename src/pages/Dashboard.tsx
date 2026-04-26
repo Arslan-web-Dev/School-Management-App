@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatCard } from "@/components/shared/StatCard";
+import { RoleQuickActions } from "@/components/shared/RoleQuickActions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Users, GraduationCap, BookOpen, CalendarCheck, Megaphone } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -98,43 +99,57 @@ const Dashboard = () => {
     );
   }
 
+  const roleGreeting: Record<string, string> = {
+    admin:   "Here's what's happening across your school today.",
+    teacher: "Your classes, schedule and salary in one place.",
+    student: "Stay on top of homework, attendance and exams.",
+    parent:  "Track your child's day, performance and fees.",
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
         title={`Welcome${profileName ? `, ${profileName.split(" ")[0]}` : ""}`}
-        description={`Here's what's happening at your school today.`}
+        description={role ? roleGreeting[role] : "Welcome to EduManage Pro."}
+        actions={role ? <Badge variant="secondary" className="capitalize">{role} panel</Badge> : null}
       />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Students" value={stats.students} icon={GraduationCap} accent="primary" />
-        <StatCard label="Teachers" value={stats.teachers} icon={Users} accent="success" />
-        <StatCard label="Classes" value={stats.classes} icon={BookOpen} accent="warning" />
-        <StatCard label="Attendance (7d)" value={`${stats.attendanceRate}%`} icon={CalendarCheck} accent="primary" />
-      </div>
+      {(role === "admin" || role === "teacher") && (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Students" value={stats.students} icon={GraduationCap} accent="primary" />
+          <StatCard label="Teachers" value={stats.teachers} icon={Users} accent="success" />
+          <StatCard label="Classes" value={stats.classes} icon={BookOpen} accent="warning" />
+          <StatCard label="Attendance (7d)" value={`${stats.attendanceRate}%`} icon={CalendarCheck} accent="primary" />
+        </div>
+      )}
+
+      {role && <RoleQuickActions role={role} />}
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Attendance trend</CardTitle>
-            <CardDescription>Daily presence rate over the last 7 days</CardDescription>
-          </CardHeader>
-          <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chart} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} unit="%" domain={[0, 100]} />
-                <Tooltip
-                  cursor={{ fill: "hsl(var(--accent))" }}
-                  contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
-                />
-                <Bar dataKey="rate" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+        {(role === "admin" || role === "teacher") && (
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Attendance trend</CardTitle>
+              <CardDescription>Daily presence rate over the last 7 days</CardDescription>
+            </CardHeader>
+            <CardContent className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chart} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                  <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} unit="%" domain={[0, 100]} />
+                  <Tooltip
+                    cursor={{ fill: "hsl(var(--accent))" }}
+                    contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
+                  />
+                  <Bar dataKey="rate" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        )}
 
-        <Card>
+        <Card className={role === "admin" || role === "teacher" ? "" : "lg:col-span-3"}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -163,18 +178,6 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick tips</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 text-sm text-muted-foreground">
-          {role === "admin" && <p>• Create classes first, then add students and teachers.</p>}
-          {(role === "admin" || role === "teacher") && <p>• Mark attendance daily — the chart above updates automatically.</p>}
-          <p>• Pin important notices so they always appear at the top.</p>
-          <p>• Toggle the theme from the top right for dark mode.</p>
-        </CardContent>
-      </Card>
     </div>
   );
 };

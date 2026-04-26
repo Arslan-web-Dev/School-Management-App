@@ -274,6 +274,7 @@ export type Database = {
           due_date: string
           id: string
           notes: string | null
+          paid_at: string | null
           period: string
           status: string
           student_id: string
@@ -286,6 +287,7 @@ export type Database = {
           due_date: string
           id?: string
           notes?: string | null
+          paid_at?: string | null
           period: string
           status?: string
           student_id: string
@@ -298,6 +300,7 @@ export type Database = {
           due_date?: string
           id?: string
           notes?: string | null
+          paid_at?: string | null
           period?: string
           status?: string
           student_id?: string
@@ -937,6 +940,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_monthly_invoices: {
+        Args: {
+          _amount: number
+          _class_id: string
+          _due_date: string
+          _period: string
+        }
+        Returns: number
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -949,6 +961,10 @@ export type Database = {
         Returns: boolean
       }
       is_parent_of: { Args: { _student_id: string }; Returns: boolean }
+      notify_users: {
+        Args: { _body: string; _title: string; _user_ids: string[] }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "teacher" | "student" | "parent"

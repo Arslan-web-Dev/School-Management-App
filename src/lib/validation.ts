@@ -32,10 +32,7 @@ export const teacherSchema = z.object({
 export const classSchema = z.object({
   name: z.string().trim().min(1).max(50),
   section: z.string().trim().min(1).max(10),
-  grade_level: z.preprocess(
-    (v) => (v === "" || v == null ? undefined : Number(v)),
-    z.number().int().min(1).max(20).optional()
-  ),
+  grade_level: z.coerce.number().int().min(1).max(20).optional(),
   class_teacher_id: z.string().uuid().nullable().optional(),
   academic_year: z.string().trim().min(4).max(20),
 });
@@ -53,45 +50,45 @@ export const parentSchema = z.object({
   occupation: z.string().trim().max(100).optional().or(z.literal("")),
   phone: z.string().trim().max(20).optional().or(z.literal("")),
   password: z.string().min(6).max(72),
-  student_ids: z.array(z.string().uuid()).default([]),
+  student_ids: z.array(z.string().uuid()).optional(),
 });
 
 export const subjectSchema = z.object({
   name: z.string().trim().min(1).max(100),
   code: z.string().trim().max(20).optional().or(z.literal("")),
   class_id: z.string().uuid().nullable().optional(),
-  fee_amount: z.preprocess((v) => (v === "" || v == null ? 0 : Number(v)), z.number().min(0).default(0)),
+  fee_amount: z.coerce.number().min(0).optional(),
 });
 
 export const feeStructureSchema = z.object({
   name: z.string().trim().min(1).max(100),
   branch_id: z.string().uuid().nullable().optional(),
   class_id: z.string().uuid().nullable().optional(),
-  amount: z.preprocess((v) => Number(v), z.number().min(0)),
+  amount: z.coerce.number().min(0),
   frequency: z.enum(["monthly", "quarterly", "yearly", "one-time"]),
 });
 
 export const invoiceSchema = z.object({
   student_id: z.string().uuid(),
   period: z.string().trim().min(1).max(40),
-  amount: z.preprocess((v) => Number(v), z.number().min(0)),
-  discount: z.preprocess((v) => (v === "" || v == null ? 0 : Number(v)), z.number().min(0).default(0)),
+  amount: z.coerce.number().min(0),
+  discount: z.coerce.number().min(0).optional(),
   due_date: z.string().min(1),
   notes: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
 export const salaryStructureSchema = z.object({
   teacher_id: z.string().uuid(),
-  base_amount: z.preprocess((v) => Number(v), z.number().min(0)),
-  per_leave_deduction: z.preprocess((v) => (v === "" || v == null ? 0 : Number(v)), z.number().min(0).default(0)),
+  base_amount: z.coerce.number().min(0),
+  per_leave_deduction: z.coerce.number().min(0).optional(),
 });
 
 export const salaryPaymentSchema = z.object({
   teacher_id: z.string().uuid(),
   period: z.string().trim().min(1).max(40),
-  base_amount: z.preprocess((v) => Number(v), z.number().min(0)),
-  deductions: z.preprocess((v) => (v === "" || v == null ? 0 : Number(v)), z.number().min(0).default(0)),
-  bonus: z.preprocess((v) => (v === "" || v == null ? 0 : Number(v)), z.number().min(0).default(0)),
+  base_amount: z.coerce.number().min(0),
+  deductions: z.coerce.number().min(0).optional(),
+  bonus: z.coerce.number().min(0).optional(),
   notes: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
@@ -113,7 +110,7 @@ export const timetableSchema = z.object({
   class_id: z.string().uuid(),
   subject_id: z.string().uuid().nullable().optional(),
   teacher_id: z.string().uuid().nullable().optional(),
-  day_of_week: z.preprocess((v) => Number(v), z.number().int().min(0).max(6)),
+  day_of_week: z.coerce.number().int().min(0).max(6),
   start_time: z.string().min(1),
   end_time: z.string().min(1),
 });
@@ -123,5 +120,5 @@ export const examSchema = z.object({
   class_id: z.string().uuid(),
   subject_id: z.string().uuid().nullable().optional(),
   exam_date: z.string().min(1),
-  total_marks: z.preprocess((v) => Number(v), z.number().min(1)),
+  total_marks: z.coerce.number().min(1),
 });

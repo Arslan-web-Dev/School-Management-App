@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { NotificationBell } from "@/components/shared/NotificationBell";
 
 export const TopBar = () => {
   const { user, role, signOut } = useAuth();
@@ -22,13 +23,21 @@ export const TopBar = () => {
     navigate("/auth");
   };
 
+  const roleColors: Record<string, string> = {
+    admin:   "bg-primary/10 text-primary border-primary/20",
+    teacher: "bg-success/10 text-success border-success/20",
+    student: "bg-warning/10 text-warning border-warning/20",
+    parent:  "bg-accent text-accent-foreground border-accent-foreground/10",
+  };
+
   return (
     <div className="flex flex-1 items-center justify-end gap-2">
       {role && (
-        <Badge variant="secondary" className="capitalize hidden sm:inline-flex">
-          {role}
+        <Badge variant="outline" className={`capitalize hidden sm:inline-flex ${roleColors[role] ?? ""}`}>
+          {role} panel
         </Badge>
       )}
+      <NotificationBell />
       <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
         {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
       </Button>

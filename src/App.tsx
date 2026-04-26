@@ -22,8 +22,12 @@ import MyAttendance from "./pages/MyAttendance";
 import Exams from "./pages/Exams";
 import Fees from "./pages/Fees";
 import Salaries from "./pages/Salaries";
+import MySalary from "./pages/MySalary";
 import Notices from "./pages/Notices";
+import Notifications from "./pages/Notifications";
+import Reports from "./pages/Reports";
 import MyChildren from "./pages/MyChildren";
+import MyResults from "./pages/MyResults";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -46,6 +50,7 @@ const App = () => (
                 <Route element={<DashboardLayout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/notices" element={<Notices />} />
+                  <Route path="/notifications" element={<Notifications />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/timetable" element={<Timetable />} />
                   <Route path="/diary" element={<Diary />} />
@@ -62,12 +67,19 @@ const App = () => (
                 </Route>
               </Route>
 
+              <Route element={<ProtectedRoute roles={["teacher"]} />}>
+                <Route element={<DashboardLayout />}>
+                  <Route path="/my-salary" element={<MySalary />} />
+                </Route>
+              </Route>
+
               <Route element={<ProtectedRoute roles={["admin"]} />}>
                 <Route element={<DashboardLayout />}>
                   <Route path="/teachers" element={<Teachers />} />
                   <Route path="/parents" element={<Parents />} />
                   <Route path="/subjects" element={<Subjects />} />
                   <Route path="/branches" element={<Branches />} />
+                  <Route path="/reports" element={<Reports />} />
                   <Route path="/settings" element={<Settings />} />
                 </Route>
               </Route>
@@ -87,6 +99,7 @@ const App = () => (
               <Route element={<ProtectedRoute roles={["parent"]} />}>
                 <Route element={<DashboardLayout />}>
                   <Route path="/my-children" element={<MyChildren />} />
+                  <Route path="/my-results" element={<MyResults />} />
                 </Route>
               </Route>
 
