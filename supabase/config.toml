@@ -1,4 +1,22 @@
-project_id = "befnhqrgjdyfaeaueqpr"
+project_id = "wkibxogxxqoectcervpn"
 
-[functions.create-user]
+[functions.users]
+verify_jwt = true
+
+[functions.students]
+verify_jwt = true
+
+[functions.attendance]
+verify_jwt = true
+
+[functions.grades]
+verify_jwt = true
+
+[functions.fees]
+verify_jwt = true
+
+[functions.salary]
+verify_jwt = true
+
+[functions.reports]
 verify_jwt = true

@@ -10,6 +10,7 @@ interface AuthContextValue {
   role: AppRole | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  getRoleRedirect: () => string;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -68,8 +69,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setRole(null);
   };
 
+  const getRoleRedirect = (): string => {
+    if (!role) return "/dashboard";
+    const redirects: Record<AppRole, string> = {
+      admin: "/dashboard",
+      teacher: "/dashboard",
+      student: "/student",
+      parent: "/dashboard",
+    };
+    return redirects[role];
+  };
+
   return (
-    <AuthContext.Provider value={{ session, user, role, loading, signOut }}>
+    <AuthContext.Provider value={{ session, user, role, loading, signOut, getRoleRedirect }}>
       {children}
     </AuthContext.Provider>
   );

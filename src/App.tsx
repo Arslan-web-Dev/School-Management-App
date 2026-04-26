@@ -30,7 +30,15 @@ import MyChildren from "./pages/MyChildren";
 import MyResults from "./pages/MyResults";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import AdminUsers from "./pages/AdminUsers";
+import ClassAssignments from "./pages/ClassAssignments";
+import ParentChildren from "./pages/ParentChildren";
 import NotFound from "./pages/NotFound";
+import StudentDashboard from "./pages/student/StudentDashboard";
+import StudentAttendance from "./pages/student/StudentAttendance";
+import StudentResults from "./pages/student/StudentResults";
+import StudentNotices from "./pages/student/StudentNotices";
+import StudentProfile from "./pages/student/StudentProfile";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +89,9 @@ const App = () => (
                   <Route path="/branches" element={<Branches />} />
                   <Route path="/reports" element={<Reports />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/admin/users" element={<AdminUsers />} />
+                  <Route path="/admin/class-assignments" element={<ClassAssignments />} />
+                  <Route path="/admin/parent-children" element={<ParentChildren />} />
                 </Route>
               </Route>
 
@@ -93,6 +104,16 @@ const App = () => (
               <Route element={<ProtectedRoute roles={["student"]} />}>
                 <Route element={<DashboardLayout />}>
                   <Route path="/my-attendance" element={<MyAttendance />} />
+                </Route>
+              </Route>
+
+              <Route element={<ProtectedRoute roles={["student"]} />}>
+                <Route path="/student" element={<DashboardLayout />}>
+                  <Route index element={<StudentDashboard />} />
+                  <Route path="attendance" element={<StudentAttendance />} />
+                  <Route path="results" element={<StudentResults />} />
+                  <Route path="notices" element={<StudentNotices />} />
+                  <Route path="profile" element={<StudentProfile />} />
                 </Route>
               </Route>
 

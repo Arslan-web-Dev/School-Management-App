@@ -16,13 +16,32 @@ const MyChildren = () => {
   useEffect(() => {
     const load = async () => {
       if (!user) return;
-      const { data: parent } = await supabase.from("parents").select("id").eq("profile_id", user.id).maybeSingle();
-      if (!parent) return;
-      const { data } = await supabase
-        .from("parent_students")
-        .select("students(id, roll_number, admission_date, classes(name, section), profiles(full_name, email))")
-        .eq("parent_id", parent.id);
-      const list = (data ?? []).map((d: any) => d.students).filter(Boolean);
+
+      // Get linked children through parent_children table (own-child boundary)
+      const { data: links, error: linksError } = await supabase
+        .from("parent_children")
+        .select("student_id, relation")
+        .eq("parent_id", user.id);
+
+      if (linksError || !links || links.length === 0) {
+        setChildren([]);
+        return;
+      }
+
+      const studentIds = links.map((l: any) => l.student_id);
+
+      // Fetch student details
+      const { data: students, error: studentsError } = await supabase
+        .from("students")
+        .select("id, roll_number, admission_date, classes(name, section), profiles(full_name, email)")
+        .in("id", studentIds);
+
+      if (studentsError) {
+        setChildren([]);
+        return;
+      }
+
+      const list = (students ?? []).filter(Boolean);
 
       // Enrich with attendance counts + recent diary + invoices for each child
       const enriched = await Promise.all(list.map(async (c: any) => {
@@ -39,7 +58,15 @@ const MyChildren = () => {
     load();
   }, [user]);
 
-  if (children.length === 0) return <div className="space-y-6"><PageHeader title="My Children" /><EmptyState title="No children linked" description="Ask the school admin to link your children." /></div>;
+  if (children.length === 0) return (
+    <div className="space-y-6">
+      <PageHeader title="My Children" description="View your children's profiles and academic progress" />
+      <EmptyState
+        title="No children linked"
+        description="You don't have access to any children's records yet. Please contact the school administrator to link your children to your account."
+      />
+    </div>
+  );
 
   return (
     <div className="space-y-6">

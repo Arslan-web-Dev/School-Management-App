@@ -21,7 +21,7 @@ interface StudentRow { id: string; roll_number: string; profiles: { full_name: s
 interface Existing { student_id: string; status: Status; }
 
 const Attendance = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [classId, setClassId] = useState<string>("");
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
@@ -30,14 +30,63 @@ const Attendance = () => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [classesLoading, setClassesLoading] = useState(true);
+  const [assignedClassIds, setAssignedClassIds] = useState<string[]>([]);
 
+  // Fetch classes - filtered by assignments for teachers
   useEffect(() => {
-    supabase.from("classes").select("id, name, section").order("name").then(({ data }) => {
-      setClasses((data as ClassOption[]) ?? []);
-      if (data && data.length) setClassId(data[0].id);
-      setClassesLoading(false);
-    });
-  }, []);
+    const fetchClasses = async () => {
+      if (!user) return;
+
+      try {
+        // If teacher, get their assigned classes
+        if (role === "teacher") {
+          const { data: assignments, error: assignmentsError } = await supabase
+            .from("class_assignments")
+            .select("class_id")
+            .eq("teacher_id", user.id);
+
+          if (assignmentsError) throw assignmentsError;
+
+          const classIds = assignments?.map((a: any) => a.class_id) || [];
+          setAssignedClassIds(classIds);
+
+          if (classIds.length === 0) {
+            // No assignments - show empty state with message
+            setClasses([]);
+            setClassesLoading(false);
+            return;
+          }
+
+          // Fetch only assigned classes
+          const { data: classesData, error: classesError } = await supabase
+            .from("classes")
+            .select("id, name, section")
+            .in("id", classIds)
+            .order("name");
+
+          if (classesError) throw classesError;
+          setClasses((classesData as ClassOption[]) ?? []);
+          if (classesData && classesData.length) setClassId(classesData[0].id);
+        } else {
+          // Admin sees all classes
+          const { data, error } = await supabase
+            .from("classes")
+            .select("id, name, section")
+            .order("name");
+
+          if (error) throw error;
+          setClasses((data as ClassOption[]) ?? []);
+          if (data && data.length) setClassId(data[0].id);
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Failed to load classes");
+      } finally {
+        setClassesLoading(false);
+      }
+    };
+
+    fetchClasses();
+  }, [user, role]);
 
   useEffect(() => {
     if (!classId) return;
@@ -110,7 +159,15 @@ const Attendance = () => {
           {classesLoading || loading ? (
             <div className="space-y-2">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12" />)}</div>
           ) : classes.length === 0 ? (
-            <EmptyState icon={CalendarCheck} title="No classes" description="Create a class first." />
+            role === "teacher" ? (
+              <EmptyState
+                icon={CalendarCheck}
+                title="No class assignments"
+                description="You have not been assigned to any classes yet. Please contact an administrator to assign you to your classes."
+              />
+            ) : (
+              <EmptyState icon={CalendarCheck} title="No classes" description="Create a class first." />
+            )
           ) : students.length === 0 ? (
             <EmptyState icon={CalendarCheck} title="No students in this class" description="Add students and assign them to this class." />
           ) : (
