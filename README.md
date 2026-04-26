@@ -7,6 +7,13 @@ A modern, comprehensive school management system built with **React + TypeScript
 [![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite)](https://vitejs.dev/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-2.10-3ECF8E?logo=supabase)](https://supabase.com/)
+[![Vercel](https://img.shields.io/badge/Vercel-Live-black?logo=vercel)](https://school-management-app-57az.vercel.app/)
+
+## 🌐 Live Demo
+
+**🔗 [https://school-management-app-57az.vercel.app/](https://school-management-app-57az.vercel.app/)**
+
+Experience the live application deployed on Vercel with Supabase backend.
 
 ---
 
@@ -33,10 +40,12 @@ A modern, comprehensive school management system built with **React + TypeScript
 
 - 🔒 **Role-Based Access Control** - Secure, server-enforced permissions
 - 📱 **Fully Responsive** - Works on desktop, tablet, and mobile
-- 🌙 **Dark/Light Theme** - Persistent user preference
+- 🌙 **Dark Mode Default** - Modern dark theme with light mode toggle
 - ⚡ **Real-time Data** - Live updates with React Query
 - 🎨 **Modern UI** - shadcn/ui components with Tailwind CSS
 - 🗄️ **Database Security** - Row Level Security (RLS) on all tables
+- 🚀 **Serverless API** - 26 Supabase Edge Functions deployed
+- 📊 **Data Boundaries** - Own-data (teachers) & own-child (parents) restrictions
 
 ---
 
@@ -413,6 +422,21 @@ npm run build
 ```
 
 Output will be in `dist/` directory.
+
+### Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Arslan-web-Dev/School-Management-App)
+
+Or deploy manually:
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+**Live Site:** [https://school-management-app-57az.vercel.app/](https://school-management-app-57az.vercel.app/)
 
 ---
 
